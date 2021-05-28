@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('users')
 export default class User {
@@ -16,8 +16,12 @@ export default class User {
     password: string;
 
     @Column()
+    role: "client" | "manager" | "admin"
+
+    @Column()
     created_at: Date;
 
     @Column()
     update_at: Date;
+
 }

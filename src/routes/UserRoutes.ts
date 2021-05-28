@@ -5,4 +5,6 @@ const router = Router();
 
 router.get("/users", UserController.index);
 
+router.post("/users", UserController.store);
+
 export default router;
