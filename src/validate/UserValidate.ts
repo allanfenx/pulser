@@ -23,7 +23,7 @@ type User = {
 
 class UserValidate {
 
-    validUser(user: User, erros: string[]) {
+    validUser(user: User, erros: any[]) {
 
 
         erros = [];

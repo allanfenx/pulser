@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import User from "../models/User";
-import UserValidate from "../validate/UserValidate";
+import bcrypt from "bcrypt";
+import UserView from "../view/UserView";
 
 
 class UserController {
@@ -10,7 +11,7 @@ class UserController {
 
         const users = await getRepository(User).find();
 
-        return response.json({ users });
+        return response.json(UserView.renderMany(users));
     }
 
     async store(request: Request, response: Response) {
@@ -18,11 +19,7 @@ class UserController {
         const { name, email, password } = request.body;
 
         //init validate
-        let erros: any[] = [];
-
         const data = { name, email, password };
-
-        if (erros.length > 0) return response.status(401).json({ erro: UserValidate.validUser(data, erros) });
 
         const repository = getRepository(User);
 
@@ -30,17 +27,49 @@ class UserController {
 
         if (user) return response.status(401).json({ erro: "Já existe usario cadastrado com este email" });
 
-        user = repository.create({ name, email, password });
+        const hash = await bcrypt.hash(password, 10);
+
+        user = repository.create({ name, email, password: hash });
 
         try {
             repository.save(user);
 
-            user.password = "";
-
-            return response.json({ user });
+            return response.json(UserView.render(user));
         } catch (error) {
 
-            return response.status(400).json({ erro: "Falha ao salvar usuario" });
+            return response.status(400).json({ erro: "Falha ao salvar usuario " });
+        }
+    }
+
+    async show(request: Request, response: Response) {
+
+        const { id } = request.params;
+
+        const repository = getRepository(User);
+
+        const user = await repository.findOne({ where: { id } })
+
+        return response.json(UserView.render(user));
+    }
+
+    async delete(request: Request, response: Response) {
+
+        const { id } = request.params;
+
+        const repository = getRepository(User);
+
+        const user = await repository.findOne({ where: { id } });
+
+        if (!user) return response.status(404).json({ erro: "User not found" });
+
+        try {
+
+            await repository.remove(user);
+
+            return response.json();
+        } catch (error) {
+
+            return response.status(400).json({ erro: "Falha ao deletar user" });
         }
     }
 }
