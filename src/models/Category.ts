@@ -1,13 +1,14 @@
-import { Column, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import Product from "./Product";
 
-
+@Entity("categories")
 class Category {
 
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @Column()
-    name: string;
+    title: string;
 
     @Column()
     slug: string;
@@ -17,6 +18,12 @@ class Category {
 
     @Column()
     update_at: string;
+
+    @OneToMany(() => Product, products => products.category, {
+        cascade: ['insert', 'update']
+    })
+    @JoinColumn()
+    products: Product[];
 }
 
 export default Category;

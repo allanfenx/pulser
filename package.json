@@ -13,11 +13,11 @@
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
-    "date-fns": "^2.22.1",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.6.0",
     "reflect-metadata": "^0.1.13",
+    "slugify": "^1.5.3",
     "typeorm": "^0.2.32"
   },
   "devDependencies": {

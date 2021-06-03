@@ -4,6 +4,7 @@ import { getRepository } from "typeorm";
 import User from "../models/User";
 import bcrypt from "bcrypt";
 import UserView from "../view/UserView";
+import { UserValidate } from "../validate/UserValidate";
 
 class AuthController {
 
@@ -29,7 +30,11 @@ class AuthController {
         const { name, email, password } = request.body;
 
         //init validate
-        const data = { name, email, password };
+        let erros: string[] = [];
+
+        UserValidate(request.body, erros);
+
+        if (erros.length > 0) return response.status(401).json({ erros });
 
         const repository = getRepository(User);
 

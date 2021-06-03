@@ -3,6 +3,7 @@ import { getRepository } from "typeorm";
 import User from "../models/User";
 import bcrypt from "bcrypt";
 import UserView from "../view/UserView";
+import { UserValidate } from "../validate/UserValidate";
 
 
 class UserController {
@@ -19,7 +20,12 @@ class UserController {
         const { name, email, password } = request.body;
 
         //init validate
-        const data = { name, email, password };
+        let erros: string[] = [];
+
+        UserValidate(request.body, erros)
+
+        if (erros.length > 0) return response.json({ erro: erros });
+        //end validate
 
         const repository = getRepository(User);
 
@@ -45,9 +51,14 @@ class UserController {
 
         const { id } = request.params;
 
+        if (!id.match(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i))
+            return response.status(404).json({ erro: "Id invalido" });
+
         const repository = getRepository(User);
 
-        const user = await repository.findOne({ where: { id } })
+        const user = await repository.findOne(id)
+
+        if (!user) return response.status(404).json({ erro: "User not found" });
 
         return response.json(UserView.render(user));
     }
@@ -55,6 +66,9 @@ class UserController {
     async delete(request: Request, response: Response) {
 
         const { id } = request.params;
+
+        if (!id.match(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i))
+            return response.status(404).json({ erro: "Id invalido" });
 
         const repository = getRepository(User);
 
