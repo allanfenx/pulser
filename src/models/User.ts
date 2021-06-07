@@ -1,10 +1,14 @@
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import Andress from "./Andress";
 
 @Entity('users')
 export default class User {
 
     @PrimaryGeneratedColumn('uuid')
     id: string;
+
+    @Column()
+    cpf: string;
 
     @Column()
     name: string;
@@ -23,5 +27,10 @@ export default class User {
 
     @Column()
     update_at: Date;
+
+    @OneToMany(() => Andress, andress => andress.user, {
+        cascade: ['insert', 'update']
+    })
+    andress: Andress[];
 
 }

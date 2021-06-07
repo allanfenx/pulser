@@ -1,47 +1,50 @@
 import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
-export class users1622089270135 implements MigrationInterface {
+export class andress1622759548377 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-
-        //await queryRunner.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
-
         await queryRunner.createTable(new Table({
-            name: "users",
+            name: "andress",
             columns: [
                 {
                     name: "id",
                     type: "uuid",
                     isPrimary: true,
-                    isUnique: true,
                     generationStrategy: "uuid",
                     default: "uuid_generate_v4()"
                 },
                 {
-                    name: "name",
+                    name: "userId",
+                    type: "uuid"
+                },
+                {
+                    name: "cep",
+                    type: "varchar",
+                    length: "9"
+                },
+                {
+                    name: "street",
                     type: "varchar",
                     length: "50"
                 },
                 {
-                    name: "cpf",
+                    name: "district",
                     type: "varchar",
-                    isUnique: true,
-                    length: "14"
+                    length: "50",
                 },
                 {
-                    name: "email",
+                    name: "city",
                     type: "varchar",
-                    length: "80",
-                    isUnique: true
+                    length: "50"
                 },
                 {
-                    name: "password",
-                    type: "varchar"
+                    name: "state",
+                    type: "character",
+                    length: "2"
                 },
                 {
-                    name: "role",
-                    type: "enum",
-                    enum: ["client", "manager", "admin"],
+                    name: "number",
+                    type: "smallint"
                 },
                 {
                     name: 'created_at',
@@ -53,13 +56,22 @@ export class users1622089270135 implements MigrationInterface {
                     type: 'timestamp',
                     default: 'now()'
                 }
+            ],
+            foreignKeys: [
+                {
+                    name: "User",
+                    columnNames: ["userId"],
+                    referencedTableName: "users",
+                    referencedColumnNames: ["id"],
+                    onDelete: "CASCADE",
+                    onUpdate: "CASCADE"
+                }
             ]
         }))
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropTable("users");
-        //await queryRunner.query('DROP EXTENSION "uuid-ossp"');
+        await queryRunner.dropTable("andress");
     }
 
 }

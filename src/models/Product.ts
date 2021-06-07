@@ -20,6 +20,12 @@ class Product {
     price: number;
 
     @Column()
+    created_at: Date;
+
+    @Column()
+    update_at: Date;
+
+    @Column()
     categoryId: string;
 
     @ManyToOne(() => Category, category => category.products)

@@ -8,18 +8,19 @@ export class product1622667837539 implements MigrationInterface {
             columns: [
                 {
                     name: "id",
-                    type: "uuid",
+                    type: "integer",
                     isPrimary: true,
-                    generationStrategy: "uuid",
-                    default: "uuid_generate_v4()"
+                    generationStrategy: "increment",
+                    isGenerated: true
                 },
                 {
                     name: "categoryId",
-                    type: "uuid"
+                    type: "integer"
                 },
                 {
                     name: "name",
                     type: "varchar",
+                    isUnique: true,
                     length: "50"
                 },
                 {

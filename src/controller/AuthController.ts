@@ -16,35 +16,40 @@ class AuthController {
 
         if (!user) return response.status(401).json({ erro: "Credentials invalid" });
 
+        const enviroment = String(process.env.SECRET)
+
         if (!await bcrypt.compare(password, user.password)) return response.status(401).json({ erro: "Credentials invalid" });
 
-        const token = jwt.sign({ id: user.id, name: user.name, email: user.email, role: user.role }, 'vanish', {
+        const token = jwt.sign({ id: user.id, name: user.name, email: user.email, role: user.role }, enviroment, {
             expiresIn: 60000
         });
+
+        user.password = "";
 
         return response.json({ user, token });
     }
 
     async register(request: Request, response: Response) {
 
-        const { name, email, password } = request.body;
+        const { cpf, name, email, password } = request.body;
 
         //init validate
         let erros: string[] = [];
 
         UserValidate(request.body, erros);
 
-        if (erros.length > 0) return response.status(401).json({ erros });
+        if (erros.length > 0) return response.status(401).json({ erro: erros });
+        //end validação
 
         const repository = getRepository(User);
 
-        let user = await repository.findOne({ where: { email } });
+        let user = await repository.findOne({ where: [{ cpf }, { email }] });
 
-        if (user) return response.status(401).json({ erro: "Já existe usario cadastrado com este email" });
+        if (user) return response.status(401).json({ erro: "Já existe usario cadastrado com este email ou cpf" });
 
         const hash = await bcrypt.hash(password, 10);
 
-        user = repository.create({ name, email, password: hash });
+        user = repository.create({ cpf, name, email, password: hash, role: "client" });
 
         try {
             repository.save(user);

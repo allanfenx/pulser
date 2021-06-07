@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import Category from "../models/Category";
 import slugify from "slugify";
+import CategoryView from "../view/CategoryView";
 
 class CategoryController {
 
@@ -9,7 +10,7 @@ class CategoryController {
 
         const categories = await getRepository(Category).find();
 
-        return response.json({ categories });
+        return response.json(CategoryView.renderMany(categories));
 
     }
 
@@ -18,6 +19,8 @@ class CategoryController {
         const { title } = request.body;
 
         if (!title || typeof title == undefined || title == null) return response.status(404).json({ erro: "O titulo é obrigatório" });
+
+        if (title.length > 49) return response.status(401).json({ erro: "O campo titulo nã pode ter mais que 50 caractres" });
 
         const repository = getRepository(Category);
 
@@ -30,7 +33,7 @@ class CategoryController {
         try {
             await repository.save(category);
 
-            return response.json({ category });
+            return response.json(CategoryView.render(category));
 
         } catch (error) {
 
@@ -42,22 +45,49 @@ class CategoryController {
 
         const { id } = request.params;
 
-        if (!id.match(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i))
-            return response.status(404).json({ erro: "Id invalido" });
+        if (isNaN(Number(id))) return response.status(404).json({ erro: "Id invalido" });
 
         const category = await getRepository(Category).findOne({ where: { id } });
 
         if (!category) return response.status(404).json({ erro: "Categoria não encontrada" });
 
-        return response.json({ category });
+        return response.json(CategoryView.render(category));
     }
 
-    async delete(request: Request, response: Response) {
+    async update(request: Request, response: Response) {
 
         const { id } = request.params;
 
-        if (!id.match(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i))
-            return response.status(404).json({ erro: "Id invalido" });
+        if (isNaN(Number(id))) return response.status(404).json({ erro: "Id invalido" });
+
+        const { title } = request.body;
+
+        if (!title || title == null || typeof title == undefined) return response.status(401).json({ erro: "O campo titulo é obrigatório" });
+
+        if (title.length > 49) return response.status(401).json({ erro: "O campo titulo nã pode ter mais que 50 caractres" });
+
+        const repository = getRepository(Category);
+
+        const category = await repository.findOne(id);
+
+        if (!category) return response.status(404).json({ erro: "Category not found" });
+
+        try {
+
+            await repository.update(id, { title, slug: slugify(title) });
+
+            return response.json({ category: title });
+        } catch (error) {
+
+            return response.status(400).json({ erro: "Falha ao atualizar categoria" });
+        }
+    }
+
+    async destroy(request: Request, response: Response) {
+
+        const { id } = request.params;
+
+        if (isNaN(Number(id))) return response.status(404).json({ erro: "Id invalido" });
 
         const repository = getRepository(Category);
 

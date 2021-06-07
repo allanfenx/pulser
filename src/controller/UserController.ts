@@ -17,7 +17,7 @@ class UserController {
 
     async store(request: Request, response: Response) {
 
-        const { name, email, password } = request.body;
+        const { cpf, name, email, password } = request.body;
 
         //init validate
         let erros: string[] = [];
@@ -29,13 +29,13 @@ class UserController {
 
         const repository = getRepository(User);
 
-        let user = await repository.findOne({ where: { email } });
+        let user = await repository.findOne({ where: [{ cpf }, { email }] });
 
         if (user) return response.status(401).json({ erro: "Já existe usario cadastrado com este email" });
 
         const hash = await bcrypt.hash(password, 10);
 
-        user = repository.create({ name, email, password: hash });
+        user = repository.create({ cpf, name, email, password: hash });
 
         try {
             repository.save(user);
@@ -56,14 +56,16 @@ class UserController {
 
         const repository = getRepository(User);
 
-        const user = await repository.findOne(id)
+        const user = await repository.findOne(id, {
+            relations: ["andress"]
+        })
 
         if (!user) return response.status(404).json({ erro: "User not found" });
 
         return response.json(UserView.render(user));
     }
 
-    async delete(request: Request, response: Response) {
+    async destroy(request: Request, response: Response) {
 
         const { id } = request.params;
 
