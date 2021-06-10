@@ -1,4 +1,5 @@
 import Product from "../models/Product";
+import ProductStockView from "./ProductStockView";
 
 
 export default {
@@ -11,8 +12,11 @@ export default {
             slug: product.slug,
             description: product.description,
             price: product.price,
+            weight: product.weight,
+            measure: product.measure,
             created_at: product.created_at,
-            update_at: product.update_at
+            update_at: product.update_at,
+            stock: ProductStockView.renderMany(product.stocks)
         }
     },
 

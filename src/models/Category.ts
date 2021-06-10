@@ -4,8 +4,8 @@ import Product from "./Product";
 @Entity("categories")
 class Category {
 
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+    @PrimaryGeneratedColumn('increment')
+    id: number;
 
     @Column()
     title: string;

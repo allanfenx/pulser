@@ -1,11 +1,12 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import Category from "./Category";
+import ProductStock from "./ProductStock";
 
 @Entity("products")
 class Product {
 
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
+    @PrimaryGeneratedColumn("increment")
+    id: number;
 
     @Column()
     name: string;
@@ -20,17 +21,27 @@ class Product {
     price: number;
 
     @Column()
+    measure: number;
+
+    @Column()
+    weight: number;
+
+    @Column()
     created_at: Date;
 
     @Column()
     update_at: Date;
 
     @Column()
-    categoryId: string;
+    categoryId: number;
 
     @ManyToOne(() => Category, category => category.products)
     @JoinColumn()
     category: Category;
+
+    @OneToMany(() => ProductStock, stocks => stocks.product)
+    @JoinColumn()
+    stocks: ProductStock[];
 }
 
 export default Product;

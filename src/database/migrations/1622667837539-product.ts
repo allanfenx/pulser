@@ -39,6 +39,14 @@ export class product1622667837539 implements MigrationInterface {
                     scale: 2
                 },
                 {
+                    name: "measure",
+                    type: "integer"
+                },
+                {
+                    name: "Weight",
+                    type: "integer"
+                },
+                {
                     name: 'created_at',
                     type: 'timestamp',
                     default: 'now()'
