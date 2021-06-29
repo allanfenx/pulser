@@ -1,6 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import Category from "./Category";
+import ProductImage from "./ProductImage";
 import ProductStock from "./ProductStock";
+import ProductWeigth from "./ProductWeigth";
 
 @Entity("products")
 class Product {
@@ -21,12 +23,6 @@ class Product {
     price: number;
 
     @Column()
-    measure: number;
-
-    @Column()
-    weight: number;
-
-    @Column()
     created_at: Date;
 
     @Column()
@@ -42,6 +38,16 @@ class Product {
     @OneToMany(() => ProductStock, stocks => stocks.product)
     @JoinColumn()
     stocks: ProductStock[];
+
+    @OneToMany(() => ProductImage, images => images.product, {
+        cascade: ["insert", "update", "remove"]
+    })
+    @JoinColumn()
+    images: ProductImage[];
+
+    @OneToMany(() => ProductWeigth, weigth => weigth.product)
+    @JoinColumn()
+    weigth: ProductWeigth[];
 }
 
 export default Product;

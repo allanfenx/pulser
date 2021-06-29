@@ -52,9 +52,11 @@ class AuthController {
         user = repository.create({ cpf, name, email, password: hash, role: "client" });
 
         try {
-            repository.save(user);
+            await repository.save(user);
 
-            return response.json(UserView.render(user));
+            user.password = "";
+
+            return response.json({ user });
         } catch (error) {
 
             return response.status(400).json({ erro: "Falha ao salvar usuario " });

@@ -8,6 +8,7 @@ import CategoryRoutes from "./routes/CategoryRoutes";
 import ProductRoutes from "./routes/ProductRoutes";
 import AndressRoutes from "./routes/AndressRoutes";
 import ProductStockRoutes from "./routes/ProductStockRoutes";
+import ProductImageRoutes from "./routes/ProductImageRoutes";
 
 const app = express();
 const Port = 8080;
@@ -19,6 +20,7 @@ app.use(CategoryRoutes);
 app.use(ProductRoutes);
 app.use(AndressRoutes);
 app.use(ProductStockRoutes);
+app.use(ProductImageRoutes)
 
 app.listen(Port, () => {
     console.log("Aplication running!");

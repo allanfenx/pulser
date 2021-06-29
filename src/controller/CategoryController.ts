@@ -33,7 +33,7 @@ class CategoryController {
         try {
             await repository.save(category);
 
-            return response.json(CategoryView.render(category));
+            return response.json(category);
 
         } catch (error) {
 

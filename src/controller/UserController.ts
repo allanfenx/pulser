@@ -10,14 +10,16 @@ class UserController {
 
     async index(request: Request, response: Response) {
 
-        const users = await getRepository(User).find();
+        const users = await getRepository(User).find({
+            relations: ["andress"]
+        });
 
         return response.json(UserView.renderMany(users));
     }
 
     async store(request: Request, response: Response) {
 
-        const { cpf, name, email, password } = request.body;
+        const { cpf, name, email, password, role } = request.body;
 
         //init validate
         let erros: string[] = [];
@@ -35,12 +37,14 @@ class UserController {
 
         const hash = await bcrypt.hash(password, 10);
 
-        user = repository.create({ cpf, name, email, password: hash });
+        user = repository.create({ cpf, name, email, role, password: hash });
 
         try {
-            repository.save(user);
+            await repository.save(user);
 
-            return response.json(UserView.render(user));
+            user.password = "";
+
+            return response.json(user);
         } catch (error) {
 
             return response.status(400).json({ erro: "Falha ao salvar usuario " });

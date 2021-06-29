@@ -1,36 +1,51 @@
 import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
-export class productStock1623079977562 implements MigrationInterface {
+export class productImage1623350437478 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(new Table({
-            name: "product_stock",
+            name: "product_image",
             columns: [
                 {
                     name: "id",
                     type: "integer",
                     isPrimary: true,
+                    isUnique: true,
                     isGenerated: true,
-                    generationStrategy: "increment",
+                    generationStrategy: "increment"
+                },
+                {
+                    name: "name_image",
+                    type: "varchar",
+                },
+                {
+                    name: "key_name",
+                    type: "varchar",
                     isUnique: true
-                },
-                {
-                    name: "productId",
-                    type: "integer",
-                },
-                {
-                    name: "amount",
-                    type: "integer",
                 },
                 {
                     name: "color",
                     type: "varchar",
                     length: "80"
+                },
+                {
+                    name: "productId",
+                    type: "integer"
+                },
+                {
+                    name: 'created_at',
+                    type: 'timestamp',
+                    default: 'now()'
+                },
+                {
+                    name: 'update_at',
+                    type: 'timestamp',
+                    default: 'now()'
                 }
             ],
             foreignKeys: [
                 {
-                    name: "Product",
+                    name: "ProductImage",
                     columnNames: ["productId"],
                     referencedTableName: "products",
                     referencedColumnNames: ["id"],
@@ -42,7 +57,7 @@ export class productStock1623079977562 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropTable("product_stock");
+        await queryRunner.dropTable("product_image");
     }
 
 }

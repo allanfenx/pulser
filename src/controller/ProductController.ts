@@ -12,7 +12,7 @@ class ProductController {
     async index(request: Request, response: Response) {
 
         const products = await getRepository(Product).find({
-            relations: ["category", "stocks"]
+            relations: ["category", "stocks", "images"]
         });
 
         return response.json(ProductView.renderMany(products));
@@ -20,7 +20,7 @@ class ProductController {
 
     async store(request: Request, response: Response) {
 
-        const { title, name, description, price, weight, measure } = request.body;
+        const { title, name, description, price } = request.body;
 
         //init validation
         let erros: string[] = [];
@@ -40,13 +40,13 @@ class ProductController {
 
         if (product) return response.status(401).json({ erro: "Product name já cadastrado" });
 
-        product = repository.create({ name, description, price, weight, measure, slug: slugify(name), categoryId: category.id });
+        product = repository.create({ name, description, price, slug: slugify(name), categoryId: category.id });
 
         try {
 
             await repository.save(product);
 
-            return response.json(ProductView.render(product));
+            return response.json(product);
         } catch (error) {
 
             return response.status(400).json({ erro: "Falha ao cadastrar product" });
