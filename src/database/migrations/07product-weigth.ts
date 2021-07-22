@@ -14,25 +14,21 @@ export class productWeigth1624891594657 implements MigrationInterface {
                     isGenerated: true
                 },
                 {
-                    name: "productId",
-                    type: "integer"
-                },
-                {
-                    name: "measure",
+                    name: "type_measure",
                     type: "enum",
                     enum: ["centimeter", "meters"]
                 },
                 {
-                    name: "weigth",
+                    name: "type_weigth",
                     type: "enum",
                     enum: ["kilograms", "grams"]
                 },
                 {
-                    name: "measures",
+                    name: "measure",
                     type: "decimal"
                 },
                 {
-                    name: "weigths",
+                    name: "weigth",
                     type: "decimal"
                 },
                 {
@@ -46,16 +42,7 @@ export class productWeigth1624891594657 implements MigrationInterface {
                     default: 'now()'
                 }
             ],
-            foreignKeys: [
-                {
-                    name: "ProductWeigth",
-                    columnNames: ["productId"],
-                    referencedTableName: "products",
-                    referencedColumnNames: ["id"],
-                    onDelete: "CASCADE",
-                    onUpdate: "CASCADE"
-                }
-            ]
+
         }))
     }
 

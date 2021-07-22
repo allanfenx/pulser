@@ -1,5 +1,7 @@
 import Product from "../models/Product";
+import ProductImageView from "./ProductImageView";
 import ProductStockView from "./ProductStockView";
+import ProductWeigthView from "./ProductWeigthView";
 
 
 export default {
@@ -12,11 +14,11 @@ export default {
             slug: product.slug,
             description: product.description,
             price: product.price,
-            weight: product.weight,
-            measure: product.measure,
             created_at: product.created_at,
             update_at: product.update_at,
-            stock: ProductStockView.renderMany(product.stocks)
+            weigthAndMeasure: ProductWeigthView.render(product.productWeigth),
+            stock: ProductStockView.renderMany(product.stocks),
+            images: ProductImageView.renderMany(product.images)
         }
     },
 

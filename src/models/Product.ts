@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import Category from "./Category";
 import ProductImage from "./ProductImage";
 import ProductStock from "./ProductStock";
@@ -39,15 +39,18 @@ class Product {
     @JoinColumn()
     stocks: ProductStock[];
 
-    @OneToMany(() => ProductImage, images => images.product, {
+    @OneToMany(() => ProductImage, image => image.product, {
         cascade: ["insert", "update", "remove"]
     })
     @JoinColumn()
     images: ProductImage[];
 
-    @OneToMany(() => ProductWeigth, weigth => weigth.product)
+
+    @OneToOne(type => ProductWeigth, {
+        cascade: ["insert", "remove", "update"]
+    })
     @JoinColumn()
-    weigth: ProductWeigth[];
+    productWeigth: ProductWeigth;
 }
 
 export default Product;

@@ -1,26 +1,23 @@
-import { Column, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import Product from "./Product";
 
-
+@Entity("product-weigth")
 export default class ProductWeigth {
 
     @PrimaryGeneratedColumn('increment')
     id: number;
 
     @Column()
-    productId: number;
+    type_measure: "centimeter" | "meters";
 
     @Column()
-    mesuare: "centimeters" | "meters";
+    type_weigth: "kilograms" | "grams";
 
     @Column()
-    weigth: "kilograms" | "grams";
+    measure: number;
 
     @Column()
-    measures: number;
-
-    @Column()
-    weigths: number;
+    weigth: number;
 
     @Column()
     created_at: Date;
@@ -28,9 +25,4 @@ export default class ProductWeigth {
     @Column()
     update_at: Date;
 
-    @ManyToOne(() => Product, product => product.weigth, {
-        cascade: ["insert", "remove", "update"]
-    })
-    @JoinColumn()
-    product: Product;
 }
