@@ -21,6 +21,7 @@ class UserController {
 
         const { cpf, name, email, password, role } = request.body;
 
+
         //init validate
         let erros: string[] = [];
 
@@ -44,7 +45,7 @@ class UserController {
 
             user.password = "";
 
-            return response.json(user);
+            return response.json({ user });
         } catch (error) {
 
             return response.status(400).json({ erro: "Falha ao salvar usuario " });
